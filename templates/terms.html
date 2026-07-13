@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+
+{% block title %}Spendly — Terms and Conditions{% endblock %}
+
+{% block head %}
+<style>
+    .terms-section {
+        max-width: 760px;
+        margin: 0 auto;
+        padding: 4rem 2rem 5rem;
+    }
+    .terms-section h1 {
+        font-family: var(--font-display);
+        font-size: clamp(1.75rem, 3vw, 2.5rem);
+        color: var(--ink);
+        margin-bottom: 0.5rem;
+    }
+    .terms-date {
+        font-size: 0.85rem;
+        color: var(--ink-muted);
+        margin-bottom: 2.5rem;
+    }
+    .terms-section h2 {
+        font-family: var(--font-display);
+        font-size: 1.3rem;
+        color: var(--ink);
+        margin-top: 2.5rem;
+        margin-bottom: 0.75rem;
+    }
+    .terms-section p {
+        font-size: 0.95rem;
+        color: var(--ink-soft);
+        line-height: 1.7;
+        margin-bottom: 1rem;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<section class="terms-section">
+    <h1>Terms and Conditions</h1>
+    <p class="terms-date">Last updated: July 2026</p>
+
+    <p>
+        These Terms and Conditions govern your use of Spendly, a personal expense
+        tracking application. By using Spendly, you agree to these terms.
+    </p>
+
+    <h2>Acceptance of Terms</h2>
+    <p>
+        By accessing or using Spendly, you confirm that you accept these Terms
+        and Conditions and agree to comply with them. If you do not agree, you
+        must not use the application.
+    </p>
+
+    <h2>Use of Service</h2>
+    <p>
+        Spendly is provided for personal, non-commercial use. You agree to use
+        the application only for lawful purposes and in a manner that does not
+        infringe the rights of others or restrict or inhibit their use of the
+        service. You are responsible for safeguarding your account credentials
+        and for all activity that occurs under your account.
+    </p>
+
+    <h2>User Data</h2>
+    <p>
+        Spendly stores the expense data you enter — including amounts,
+        categories, descriptions, and dates — solely to provide the tracking and
+        analysis features of the application. Your data is not shared with third
+        parties except as required by law. While we take reasonable measures to
+        protect your data, you acknowledge that no online service is completely
+        secure, and you use Spendly at your own risk.
+    </p>
+
+    <h2>Limitations of Liability</h2>
+    <p>
+        Spendly is provided "as is" without any warranties, express or implied.
+        We are not liable for any direct, indirect, incidental, or consequential
+        damages arising from your use of or inability to use the application.
+        Spendly is a tool for personal record-keeping and is not a substitute
+        for professional financial advice.
+    </p>
+
+    <h2>Changes to Terms</h2>
+    <p>
+        We reserve the right to update or modify these Terms and Conditions at
+        any time. Changes will be posted on this page with an updated date at
+        the top. Continued use of Spendly after any changes constitutes your
+        acceptance of the revised terms.
+    </p>
+</section>
+{% endblock %}
