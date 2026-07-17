@@ -1,0 +1,362 @@
+/* ------------------------------------------------------------------ */
+/* Profile page — custom properties                                    */
+/* ------------------------------------------------------------------ */
+
+:root {
+    --badge-food-bg: #e8f0eb;
+    --badge-food-fg: #1a472a;
+    --badge-transport-bg: #e0edf8;
+    --badge-transport-fg: #1a4a7a;
+    --badge-bills-bg: #fdf3e3;
+    --badge-bills-fg: #8a5e1a;
+    --badge-shopping-bg: #ede4f5;
+    --badge-shopping-fg: #5a2d8a;
+    --badge-entertainment-bg: #fde8ef;
+    --badge-entertainment-fg: #8a1a4a;
+    --badge-health-bg: #e0f5ec;
+    --badge-health-fg: #1a6a4a;
+    --badge-other-bg: #ececec;
+    --badge-other-fg: #555555;
+
+    --bar-food: #1a472a;
+    --bar-bills: #c17f24;
+    --bar-shopping: #7c3aed;
+    --bar-transport: #2563eb;
+    --bar-health: #059669;
+    --bar-entertainment: #db2777;
+    --bar-other: #9ca3af;
+}
+
+/* ------------------------------------------------------------------ */
+/* Layout                                                              */
+/* ------------------------------------------------------------------ */
+
+.profile-container {
+    max-width: var(--max-width);
+    margin: 0 auto;
+    padding: 2.5rem 2rem 4rem;
+}
+
+.profile-section {
+    margin-bottom: 2.5rem;
+}
+
+.profile-section-title {
+    font-family: var(--font-display, var(--font-body));
+    font-size: 1.35rem;
+    color: var(--ink);
+    margin-bottom: 1.25rem;
+    font-weight: 500;
+}
+
+/* ------------------------------------------------------------------ */
+/* User info card                                                      */
+/* ------------------------------------------------------------------ */
+
+.profile-user-card {
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+    background: var(--paper-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 1.75rem 2rem;
+}
+
+.avatar-initials {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: var(--accent);
+    color: var(--paper-card);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-body);
+    font-size: 1.5rem;
+    font-weight: 600;
+    flex-shrink: 0;
+}
+
+.user-details {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+}
+
+.user-name {
+    font-family: var(--font-display, var(--font-body));
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--ink);
+    margin: 0;
+}
+
+.user-email {
+    font-size: 0.9rem;
+    color: var(--ink-muted);
+    margin: 0;
+}
+
+.user-member-since {
+    font-size: 0.8rem;
+    color: var(--ink-faint);
+    margin-top: 0.1rem;
+}
+
+/* ------------------------------------------------------------------ */
+/* Summary stats                                                       */
+/* ------------------------------------------------------------------ */
+
+.profile-stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+}
+
+.stat-card {
+    background: var(--paper-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 1.5rem;
+    text-align: center;
+}
+
+.stat-label {
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: var(--ink-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    margin-bottom: 0.5rem;
+}
+
+.stat-value {
+    font-family: var(--font-display, var(--font-body));
+    font-size: 1.6rem;
+    font-weight: 600;
+    color: var(--ink);
+    font-variant-numeric: tabular-nums;
+}
+
+/* ------------------------------------------------------------------ */
+/* Transaction table                                                   */
+/* ------------------------------------------------------------------ */
+
+.table-wrapper {
+    overflow-x: auto;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    background: var(--paper-card);
+}
+
+.profile-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9rem;
+}
+
+.profile-table thead {
+    background: var(--paper-warm);
+}
+
+.profile-table th {
+    text-align: left;
+    padding: 0.85rem 1rem;
+    font-weight: 600;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--ink-muted);
+    border-bottom: 1px solid var(--border);
+}
+
+.profile-table td {
+    padding: 0.8rem 1rem;
+    border-bottom: 1px solid var(--border-soft);
+    color: var(--ink-soft);
+}
+
+.profile-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.profile-table tbody tr:hover {
+    background: var(--paper-warm);
+}
+
+.col-amount {
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+    font-weight: 500;
+}
+
+/* ------------------------------------------------------------------ */
+/* Category badges                                                     */
+/* ------------------------------------------------------------------ */
+
+.badge {
+    display: inline-block;
+    padding: 0.2rem 0.65rem;
+    border-radius: 999px;
+    font-size: 0.78rem;
+    font-weight: 500;
+    white-space: nowrap;
+}
+
+.badge-food {
+    background: var(--badge-food-bg);
+    color: var(--badge-food-fg);
+}
+
+.badge-transport {
+    background: var(--badge-transport-bg);
+    color: var(--badge-transport-fg);
+}
+
+.badge-bills {
+    background: var(--badge-bills-bg);
+    color: var(--badge-bills-fg);
+}
+
+.badge-shopping {
+    background: var(--badge-shopping-bg);
+    color: var(--badge-shopping-fg);
+}
+
+.badge-entertainment {
+    background: var(--badge-entertainment-bg);
+    color: var(--badge-entertainment-fg);
+}
+
+.badge-health {
+    background: var(--badge-health-bg);
+    color: var(--badge-health-fg);
+}
+
+.badge-other {
+    background: var(--badge-other-bg);
+    color: var(--badge-other-fg);
+}
+
+/* ------------------------------------------------------------------ */
+/* Category breakdown                                                  */
+/* ------------------------------------------------------------------ */
+
+.category-breakdown {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    background: var(--paper-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 1.5rem 2rem;
+}
+
+.category-row {
+    display: grid;
+    grid-template-columns: 1fr 60px;
+    grid-template-rows: auto auto;
+    gap: 0.35rem 1rem;
+    align-items: center;
+}
+
+.category-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.category-name {
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--ink-soft);
+}
+
+.category-total {
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--ink);
+    font-variant-numeric: tabular-nums;
+    text-align: right;
+}
+
+.category-bar-track {
+    grid-column: 1;
+    height: 8px;
+    background: var(--border-soft);
+    border-radius: 999px;
+    overflow: hidden;
+}
+
+.category-bar {
+    height: 100%;
+    border-radius: 999px;
+    width: var(--bar-width, 0%);
+    transition: width 0.5s ease;
+}
+
+.category-pct {
+    grid-column: 2;
+    grid-row: 1 / 3;
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: var(--ink-muted);
+    font-variant-numeric: tabular-nums;
+    text-align: right;
+}
+
+.cat-bar-food { background: var(--bar-food); }
+.cat-bar-bills { background: var(--bar-bills); }
+.cat-bar-shopping { background: var(--bar-shopping); }
+.cat-bar-transport { background: var(--bar-transport); }
+.cat-bar-health { background: var(--bar-health); }
+.cat-bar-entertainment { background: var(--bar-entertainment); }
+.cat-bar-other { background: var(--bar-other); }
+
+/* ------------------------------------------------------------------ */
+/* Responsive                                                          */
+/* ------------------------------------------------------------------ */
+
+@media (max-width: 768px) {
+    .profile-container {
+        padding: 1.5rem 1rem 3rem;
+    }
+
+    .profile-user-card {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        padding: 1.5rem 1rem;
+    }
+
+    .user-details {
+        align-items: center;
+    }
+
+    .profile-stats {
+        grid-template-columns: 1fr;
+    }
+
+    .profile-table th,
+    .profile-table td {
+        padding: 0.65rem 0.75rem;
+        font-size: 0.8rem;
+    }
+
+    .category-breakdown {
+        padding: 1rem 1.25rem;
+    }
+
+    .category-row {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto auto auto;
+        gap: 0.3rem;
+    }
+
+    .category-pct {
+        grid-column: 1;
+        grid-row: 3;
+        text-align: left;
+    }
+}
