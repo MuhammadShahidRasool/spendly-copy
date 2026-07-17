@@ -44,6 +44,24 @@ def init_db():
         conn.close()
 
 
+def create_user(name, email, password):
+    """Hash password with werkzeug, insert user row, return new user id.
+
+    Raises sqlite3.IntegrityError if the email is already taken (UNIQUE constraint).
+    """
+    password_hash = generate_password_hash(password)
+    conn = get_db()
+    try:
+        conn.execute(
+            "INSERT INTO users (name, email, password_hash) VALUES (?, ?, ?)",
+            (name, email, password_hash),
+        )
+        conn.commit()
+        return conn.execute("SELECT last_insert_rowid()").fetchone()[0]
+    finally:
+        conn.close()
+
+
 def seed_db():
     """Insert demo user and sample expenses if the users table is empty.
 
