@@ -5,6 +5,12 @@ from werkzeug.security import check_password_hash
 import os
 
 from database.db import get_db, init_db, seed_db, create_user
+from database.queries import (
+    get_user_by_id,
+    get_summary_stats,
+    get_recent_transactions,
+    get_category_breakdown,
+)
 
 app = Flask(__name__)
 app.secret_key = os.urandom(24).hex()
@@ -119,38 +125,24 @@ def profile():
     if not session.get("user_id"):
         return redirect(url_for("login"))
 
-    user = {
-        "name": "Demo User",
-        "email": "demo@spendly.com",
-        "initials": "D",
-        "member_since": "July 2026",
-    }
+    user_id = session["user_id"]
+    user = get_user_by_id(user_id)
 
-    stats = {
-        "total_spent": 515.49,
-        "transaction_count": 8,
-        "top_category": "Food",
-    }
+    if user is None:
+        session.clear()
+        flash("User not found. Please sign in again.")
+        return redirect(url_for("login"))
 
-    transactions = [
-        {"date": "2026-07-20", "description": "Dinner at Olive Tree", "category": "Food", "amount": 55.00},
-        {"date": "2026-07-18", "description": "Birthday gift wrap", "category": "Other", "amount": 25.00},
-        {"date": "2026-07-15", "description": "New running shoes", "category": "Shopping", "amount": 89.99},
-        {"date": "2026-07-12", "description": "Movie tickets", "category": "Entertainment", "amount": 30.00},
-        {"date": "2026-07-08", "description": "Pharmacy — vitamins", "category": "Health", "amount": 45.00},
-        {"date": "2026-07-05", "description": "Electricity bill", "category": "Bills", "amount": 120.00},
-        {"date": "2026-07-03", "description": "Weekly grocery run", "category": "Food", "amount": 85.50},
-        {"date": "2026-07-01", "description": "Monthly bus pass", "category": "Transport", "amount": 65.00},
-    ]
+    user["initials"] = user["name"][0] if user["name"] else "?"
 
+    stats = get_summary_stats(user_id)
+
+    transactions = get_recent_transactions(user_id)
+
+    raw_categories = get_category_breakdown(user_id)
     categories = [
-        {"name": "Food", "total": 140.50, "percentage": 27},
-        {"name": "Bills", "total": 120.00, "percentage": 23},
-        {"name": "Shopping", "total": 89.99, "percentage": 17},
-        {"name": "Transport", "total": 65.00, "percentage": 13},
-        {"name": "Health", "total": 45.00, "percentage": 9},
-        {"name": "Entertainment", "total": 30.00, "percentage": 6},
-        {"name": "Other", "total": 25.00, "percentage": 5},
+        {"name": c["name"], "total": c["amount"], "percentage": c["pct"]}
+        for c in raw_categories
     ]
 
     return render_template(
