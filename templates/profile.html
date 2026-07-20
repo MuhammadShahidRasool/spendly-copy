@@ -35,6 +35,27 @@
         </div>
     </section>
 
+    {# ── Date filter bar ── #}
+    <section class="profile-section">
+        <h2 class="profile-section-title">Filter by date</h2>
+        <form method="GET" action="{{ url_for('profile') }}" class="date-filter-form">
+            <div class="date-filter-group">
+                <label for="start_date">From</label>
+                <input type="date" id="start_date" name="start_date"
+                       value="{{ filter_start }}" class="date-input">
+            </div>
+            <div class="date-filter-group">
+                <label for="end_date">To</label>
+                <input type="date" id="end_date" name="end_date"
+                       value="{{ filter_end }}" class="date-input">
+            </div>
+            <button type="submit" class="btn-primary filter-btn">Apply</button>
+            {% if filter_start or filter_end %}
+                <a href="{{ url_for('profile') }}" class="btn-ghost filter-btn">Clear</a>
+            {% endif %}
+        </form>
+    </section>
+
     {# ── Transaction history table ── #}
     <section class="profile-section">
         <h2 class="profile-section-title">Transaction history</h2>

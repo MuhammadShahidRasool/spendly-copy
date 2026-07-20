@@ -1,6 +1,24 @@
 from database.db import get_db
 
 
+def _apply_date_filter(sql, params, start_date, end_date):
+    """Append date-filter WHERE clause and extend params.
+
+    Handles all four combinations: neither, both, only start, only end.
+    Mutates params in-place and returns the (sql, params) pair.
+    """
+    if start_date and end_date:
+        sql += " AND date BETWEEN ? AND ?"
+        params.extend([start_date, end_date])
+    elif start_date:
+        sql += " AND date >= ?"
+        params.append(start_date)
+    elif end_date:
+        sql += " AND date <= ?"
+        params.append(end_date)
+    return sql, params
+
+
 def get_user_by_id(user_id):
     """Return a dict with name, email, member_since for the given user, or None."""
     db = get_db()
@@ -34,31 +52,32 @@ def get_user_by_id(user_id):
         db.close()
 
 
-def get_summary_stats(user_id):
-    """Return dict with total_spent, transaction_count, top_category for the user."""
+def get_summary_stats(user_id, start_date=None, end_date=None):
+    """Return dict with total_spent, transaction_count, top_category for the user.
+
+    Optional start_date / end_date (YYYY-MM-DD strings) limit the range.
+    """
     db = get_db()
     try:
-        stats = db.execute(
-            """
+        sql1 = """
             SELECT
                 COALESCE(SUM(amount), 0) AS total_spent,
                 COUNT(*) AS transaction_count
             FROM expenses
             WHERE user_id = ?
-            """,
-            (user_id,),
-        ).fetchone()
+        """
+        params1 = [user_id]
+        sql1, params1 = _apply_date_filter(sql1, params1, start_date, end_date)
+        stats = db.execute(sql1, params1).fetchone()
 
-        top = db.execute(
-            """
+        sql2 = """
             SELECT category FROM expenses
             WHERE user_id = ?
-            GROUP BY category
-            ORDER BY SUM(amount) DESC
-            LIMIT 1
-            """,
-            (user_id,),
-        ).fetchone()
+        """
+        params2 = [user_id]
+        sql2, params2 = _apply_date_filter(sql2, params2, start_date, end_date)
+        sql2 += " GROUP BY category ORDER BY SUM(amount) DESC LIMIT 1"
+        top = db.execute(sql2, params2).fetchone()
 
         return {
             "total_spent": stats["total_spent"],
@@ -69,20 +88,24 @@ def get_summary_stats(user_id):
         db.close()
 
 
-def get_recent_transactions(user_id, limit=10):
-    """Return list of dicts (date, description, category, amount) ordered newest-first."""
+def get_recent_transactions(user_id, limit=10, start_date=None, end_date=None):
+    """Return list of dicts (date, description, category, amount) ordered newest-first.
+
+    Optional start_date / end_date (YYYY-MM-DD strings) limit the range.
+    """
     db = get_db()
     try:
-        rows = db.execute(
-            """
+        sql = """
             SELECT date, description, category, amount
             FROM expenses
             WHERE user_id = ?
-            ORDER BY date DESC, id DESC
-            LIMIT ?
-            """,
-            (user_id, limit),
-        ).fetchall()
+        """
+        params = [user_id]
+        sql, params = _apply_date_filter(sql, params, start_date, end_date)
+        sql += " ORDER BY date DESC, id DESC LIMIT ?"
+        params.append(limit)
+
+        rows = db.execute(sql, params).fetchall()
 
         return [
             {
@@ -97,24 +120,25 @@ def get_recent_transactions(user_id, limit=10):
         db.close()
 
 
-def get_category_breakdown(user_id):
+def get_category_breakdown(user_id, start_date=None, end_date=None):
     """Return list of dicts (name, amount, pct) ordered by amount descending.
 
+    Optional start_date / end_date (YYYY-MM-DD strings) limit the range.
     Percentages are integers rounding to 100; the largest category absorbs
     any rounding remainder.
     """
     db = get_db()
     try:
-        rows = db.execute(
-            """
+        sql = """
             SELECT category AS name, SUM(amount) AS amount
             FROM expenses
             WHERE user_id = ?
-            GROUP BY category
-            ORDER BY amount DESC
-            """,
-            (user_id,),
-        ).fetchall()
+        """
+        params = [user_id]
+        sql, params = _apply_date_filter(sql, params, start_date, end_date)
+        sql += " GROUP BY category ORDER BY amount DESC"
+
+        rows = db.execute(sql, params).fetchall()
 
         if not rows:
             return []
