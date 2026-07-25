@@ -1,4 +1,5 @@
 import sqlite3
+from datetime import datetime
 
 from flask import Flask, render_template, request, redirect, url_for, session, flash
 from werkzeug.security import check_password_hash
@@ -18,6 +19,21 @@ app.secret_key = os.urandom(24).hex()
 with app.app_context():
     init_db()
     seed_db()
+
+
+def _validate_date(date_str):
+    """Return date_str if it's a valid YYYY-MM-DD, otherwise None.
+
+    Silently ignores invalid dates so the profile page never crashes
+    from bad query-string input.
+    """
+    if not date_str:
+        return None
+    try:
+        datetime.strptime(date_str, "%Y-%m-%d")
+        return date_str
+    except (ValueError, TypeError):
+        return None
 
 
 # ------------------------------------------------------------------ #
@@ -135,11 +151,15 @@ def profile():
 
     user["initials"] = user["name"][0] if user["name"] else "?"
 
-    stats = get_summary_stats(user_id)
+    # --- Date filter ---
+    raw_start = request.args.get("start_date")
+    raw_end = request.args.get("end_date")
+    start_date = _validate_date(raw_start)
+    end_date = _validate_date(raw_end)
 
-    transactions = get_recent_transactions(user_id)
-
-    raw_categories = get_category_breakdown(user_id)
+    stats = get_summary_stats(user_id, start_date, end_date)
+    transactions = get_recent_transactions(user_id, start_date=start_date, end_date=end_date)
+    raw_categories = get_category_breakdown(user_id, start_date, end_date)
     categories = [
         {"name": c["name"], "total": c["amount"], "percentage": c["pct"]}
         for c in raw_categories
@@ -151,6 +171,8 @@ def profile():
         stats=stats,
         transactions=transactions,
         categories=categories,
+        filter_start=raw_start if start_date else "",
+        filter_end=raw_end if end_date else "",
     )
 
 
