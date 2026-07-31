@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block title %}Analytics — Spendly{% endblock %}
+
+{% block head %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/analytics.css') }}">
+{% endblock %}
+
+{% block content %}
+
+<div class="analytics-container">
+
+    <section class="coming-soon-card">
+        <span class="coming-soon-badge">
+            <span class="badge-dot-analytics"></span>
+            Coming Soon
+        </span>
+
+        <h1 class="coming-soon-title">Analytics</h1>
+        <p class="coming-soon-subtitle">
+            Insightful charts and spending trends are on the way.
+            Track where every rupee goes and make smarter money decisions.
+        </p>
+
+        <div class="coming-soon-progress">
+            <div class="progress-track">
+                <div class="progress-fill"></div>
+            </div>
+            <p class="progress-label">0% Complete</p>
+        </div>
+
+        <div class="coming-soon-actions">
+            <a href="{{ url_for('profile') }}" class="btn-primary">Back to Dashboard</a>
+        </div>
+    </section>
+
+</div>
+
+{% endblock %}
