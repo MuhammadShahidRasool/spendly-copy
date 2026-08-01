@@ -1,0 +1,30 @@
+/* ------------------------------------------------------------------ */
+/* Add Expense page — custom properties                                 */
+/* ------------------------------------------------------------------ */
+
+:root {
+    --add-expense-optional: var(--ink-faint);
+    --add-expense-textarea-border: var(--border);
+}
+
+/* ------------------------------------------------------------------ */
+/* Form                                                                */
+/* ------------------------------------------------------------------ */
+
+/* textarea doesn't inherit the body font, and needs a bit of room */
+.form-textarea {
+    resize: vertical;
+    min-height: 5rem;
+    font-family: var(--font-body);
+}
+
+/* .form-input:focus only matches inputs — give the select the same highlight */
+select.form-input:focus {
+    border-color: var(--accent);
+}
+
+.optional-hint {
+    font-size: 0.8rem;
+    font-weight: 400;
+    color: var(--add-expense-optional);
+}
