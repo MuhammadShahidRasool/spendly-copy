@@ -31,7 +31,6 @@ with app.app_context():
     init_db()
     seed_db()
 
-
 def _validate_date(date_str):
     """Return a canonical YYYY-MM-DD string if date_str is a valid date, else None.
 
@@ -92,7 +91,6 @@ EXPENSE_CATEGORIES = [
 def landing():
     return render_template("landing.html")
 
-
 @app.route("/register", methods=["GET", "POST"])
 def register():
     if session.get("user_id"):
@@ -132,7 +130,6 @@ def register():
 
     return render_template("register.html")
 
-
 @app.route("/login", methods=["GET", "POST"])
 def login():
     if session.get("user_id"):
@@ -162,16 +159,13 @@ def login():
 
     return render_template("login.html")
 
-
 @app.route("/terms")
 def terms():
     return render_template("terms.html")
 
-
 @app.route("/privacy")
 def privacy():
     return render_template("privacy.html")
-
 
 # ------------------------------------------------------------------ #
 # Placeholder routes — students will implement these                  #
@@ -182,7 +176,6 @@ def logout():
     session.clear()
     flash("You have been signed out.")
     return redirect(url_for("landing"))
-
 
 @app.route("/profile")
 def profile():
@@ -222,7 +215,6 @@ def profile():
         filter_start=raw_start if start_date else "",
         filter_end=raw_end if end_date else "",
     )
-
 
 @app.route("/analytics")
 def analytics():
@@ -291,16 +283,13 @@ def add_expense():
         "add_expense.html", categories=EXPENSE_CATEGORIES, csrf_token=_get_csrf_token()
     )
 
-
 @app.route("/expenses/<int:id>/edit")
 def edit_expense(id):
     return "Edit expense — coming in Step 8"
 
-
 @app.route("/expenses/<int:id>/delete")
 def delete_expense(id):
     return "Delete expense — coming in Step 9"
-
 
 if __name__ == "__main__":
     app.run(debug=True, port=5001)
