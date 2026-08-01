@@ -31,7 +31,7 @@ Spec file for context: .claude/specs/$ARGUMENTS.md
 Source files to reference: app.py, database/ directory, and templates/ directory
 Instruction: Review only the changed code for quality, Flask best practices, and maintainability. Do not comment on security concerns.
 Both subagents must run in parallel. Do not wait for one to finish before starting the other.
----
+--- 
 ## Step 2: Unified Report
 Once both subagents have completed, combine their findings into a single unified report. De-duplicate any overlapping findings — if both agents flagged the same line for different reasons, merge them into one finding with both perspectives noted.
 

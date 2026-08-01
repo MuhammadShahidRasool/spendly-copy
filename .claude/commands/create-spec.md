@@ -93,7 +93,7 @@ Use CSS variables — never hardcode hex values
 All templates extend base.html
 ## Definition of done
 A specific testable checklist. Each item must be something that can be verified by running the app.
-Step 8 — Save the spec
+# Step 8 — Save the spec
 Save to: .claude/specs/<step_number>-<feature_slug>.md
 
 # Step 9 — Report to the user
