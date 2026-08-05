@@ -89,14 +89,14 @@ def get_summary_stats(user_id, start_date=None, end_date=None):
 
 
 def get_recent_transactions(user_id, limit=10, start_date=None, end_date=None):
-    """Return list of dicts (date, description, category, amount) ordered newest-first.
+    """Return list of dicts (id, date, description, category, amount) ordered newest-first.
 
     Optional start_date / end_date (YYYY-MM-DD strings) limit the range.
     """
     db = get_db()
     try:
         sql = """
-            SELECT date, description, category, amount
+            SELECT id, date, description, category, amount
             FROM expenses
             WHERE user_id = ?
         """
@@ -109,6 +109,7 @@ def get_recent_transactions(user_id, limit=10, start_date=None, end_date=None):
 
         return [
             {
+                "id": row["id"],
                 "date": row["date"],
                 "description": row["description"],
                 "category": row["category"],
@@ -167,3 +168,38 @@ def get_category_breakdown(user_id, start_date=None, end_date=None):
         return breakdown
     finally:
         db.close()
+
+
+def get_expense_by_id(expense_id, user_id):
+    """Return the expense row as a sqlite3.Row if it belongs to user_id, else None.
+
+    Scoped to both id and user_id so a user can never read another user's expense.
+    """
+    db = get_db()
+    try:
+        return db.execute(
+            "SELECT * FROM expenses WHERE id = ? AND user_id = ?",
+            (expense_id, user_id),
+        ).fetchone()
+    finally:
+        db.close()
+
+
+def update_expense(expense_id, user_id, amount, category, date, description):
+    """Update an expense in place, scoped to the owning user.
+
+    The WHERE clause pins both id and user_id so a user can never overwrite
+    another user's row. Returns the number of rows updated (0 if the expense
+    does not exist or belongs to someone else). description may be None.
+    """
+    conn = get_db()
+    try:
+        cur = conn.execute(
+            "UPDATE expenses SET amount = ?, category = ?, date = ?, description = ? "
+            "WHERE id = ? AND user_id = ?",
+            (amount, category, date, description, expense_id, user_id),
+        )
+        conn.commit()
+        return cur.rowcount
+    finally:
+        conn.close()
