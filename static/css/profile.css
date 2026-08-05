@@ -239,6 +239,31 @@
 }
 
 /* ------------------------------------------------------------------ */
+/* Delete control                                                       */
+/* ------------------------------------------------------------------ */
+
+.delete-form {
+    display: inline-block;
+    margin-left: 0.5rem;
+}
+
+.btn-delete {
+    padding: 0.2rem 0.65rem;
+    border: 1px solid var(--danger);
+    background: transparent;
+    color: var(--danger);
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    font-size: 0.8rem;
+    font-family: var(--font-body);
+}
+
+.btn-delete:hover {
+    background: var(--danger-light);
+    color: var(--danger);
+}
+
+/* ------------------------------------------------------------------ */
 /* Category badges                                                     */
 /* ------------------------------------------------------------------ */
 

@@ -203,3 +203,22 @@ def update_expense(expense_id, user_id, amount, category, date, description):
         return cur.rowcount
     finally:
         conn.close()
+
+
+def delete_expense(expense_id, user_id):
+    """Delete the caller's own expense, scoped to the owning user.
+
+    The WHERE clause pins both id and user_id so a user can never delete
+    another user's row. Returns the number of rows deleted (0 if the expense
+    does not exist or belongs to someone else).
+    """
+    conn = get_db()
+    try:
+        cur = conn.execute(
+            "DELETE FROM expenses WHERE id = ? AND user_id = ?",
+            (expense_id, user_id),
+        )
+        conn.commit()
+        return cur.rowcount
+    finally:
+        conn.close()
