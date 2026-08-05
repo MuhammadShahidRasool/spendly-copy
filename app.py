@@ -22,6 +22,8 @@ from database.queries import (
     get_summary_stats,
     get_recent_transactions,
     get_category_breakdown,
+    get_expense_by_id,
+    update_expense,
 )
 
 app = Flask(__name__)
@@ -283,9 +285,77 @@ def add_expense():
         "add_expense.html", categories=EXPENSE_CATEGORIES, csrf_token=_get_csrf_token()
     )
 
-@app.route("/expenses/<int:id>/edit")
+@app.route("/expenses/<int:id>/edit", methods=["GET", "POST"])
 def edit_expense(id):
-    return "Edit expense — coming in Step 8"
+    if not session.get("user_id"):
+        return redirect(url_for("login"))
+
+    expense = get_expense_by_id(id, session["user_id"])
+    if expense is None:
+        abort(404)
+
+    error = None
+    if request.method == "POST":
+        _csrf_protect()
+
+        amount_raw = request.form.get("amount", "").strip()
+        category = request.form.get("category", "").strip()
+        date_raw = request.form.get("date", "").strip()
+        description = request.form.get("description", "").strip()
+
+        amount = None
+        try:
+            amount = float(amount_raw)
+        except (ValueError, TypeError):
+            error = "Please enter a valid amount."
+
+        if error is None and (amount <= 0 or not math.isfinite(amount)):
+            error = "Amount must be greater than zero."
+
+        if not category:
+            error = "Please select a category."
+        elif category not in EXPENSE_CATEGORIES:
+            error = "Please select a valid category."
+
+        if not date_raw:
+            error = "Please enter a date."
+        elif _validate_date(date_raw) is None:
+            error = "Please enter a valid date (YYYY-MM-DD)."
+
+        if error is None:
+            update_expense(
+                id,
+                session["user_id"],
+                amount,
+                category,
+                _validate_date(date_raw),
+                description or None,
+            )
+            flash("Expense updated successfully!", "success")
+            return redirect(url_for("profile"))
+
+    if request.method == "GET":
+        form_amount = f"{expense['amount']:.2f}"
+        form_category = expense["category"]
+        form_date = expense["date"]
+        form_description = expense["description"] or ""
+    else:
+        form_amount = amount_raw
+        form_category = category
+        form_date = date_raw
+        form_description = description
+
+    return render_template(
+        "edit_expense.html",
+        expense=expense,
+        error=error,
+        categories=EXPENSE_CATEGORIES,
+        csrf_token=_get_csrf_token(),
+        form_amount=form_amount,
+        form_category=form_category,
+        form_date=form_date,
+        form_description=form_description,
+    )
 
 @app.route("/expenses/<int:id>/delete")
 def delete_expense(id):
